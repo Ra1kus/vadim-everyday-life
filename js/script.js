@@ -17,9 +17,25 @@ let box = 32;
 
 let score = 0;
 
+function xPosCalc() {
+    let x = Math.floor(Math.random() * 17 + 1) * box
+    if(x === 288) {
+        x -= box
+    }
+    return x
+}
+
+function yPosCalc() {
+    let x = Math.floor(Math.random() * 15 + 3) * box
+    if(x === 320) {
+        x -= box
+    }
+    return x
+}
+
 let food = {
-    x: Math.floor(Math.random() * 17 + 1) * box,
-    y: Math.floor(Math.random() * 15 + 3) * box
+    x: xPosCalc(),
+    y: yPosCalc()
 }
 
 let snake = [];
