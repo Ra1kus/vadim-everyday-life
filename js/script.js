@@ -1,54 +1,52 @@
 const canvas = document.getElementById('field');
 const ctx = canvas.getContext('2d');
 
-const ground = new Image();
-ground.src = './img/field.png';
+const field = new Image();
+field.src = './img/field.jpg';
 
 const foodImg = new Image();
-foodImg.src = './img/food.png';
-
-const headImg = new Image();
-headImg.src = './img/new-head.png';
+foodImg.src = './img/food/pear_icon.svg';
 
 const bodyImg = new Image();
 bodyImg.src = './img/body.png';
 
-let box = 32;
+const cellSide = 32; /* width and height of one cell */
 
-let score = 0;
+let scoreCounter = document.getElementById('score-counter');
 
-function xPosCalc() {
-    let x = Math.floor(Math.random() * 17 + 1) * box
-    if(x === 288) {
-        x -= box
+// Snake starting position
+let snake = [
+    {
+        x: 8 * cellSide, 
+        y: 7 * cellSide
     }
-    return x
+];
+
+// Food starting position
+let food = {};
+
+// Generate food position
+function updateFoodPos() {
+    let x = Math.floor(Math.random() * 17) * cellSide;
+    let y = Math.floor(Math.random() * 15) * cellSide;
+
+    food.x = x === snake[0].x ? x - cellSide : x,
+    food.y = y === snake[0].y ? y - cellSide : y
 }
 
-function yPosCalc() {
-    let x = Math.floor(Math.random() * 15 + 3) * box
-    if(x === 320) {
-        x -= box
-    }
-    return x
-}
-
-let food = {
-    x: xPosCalc(),
-    y: yPosCalc()
-}
-
-let snake = [];
-snake[0] = {
-    x: 9 * box,
-    y: 10 * box
-}
+updateFoodPos();
 
 document.addEventListener('keydown', direction);
 
 let dir;
 
+let directionChanged = false;
+
 function direction(event) {
+    if(directionChanged) {
+        return
+    }
+
     if((event.keyCode === 65 || event.keyCode === 37) && dir !== 'right')
         dir = 'left';
     else if((event.keyCode === 87 || event.keyCode === 38) && dir !== 'down')
@@ -57,66 +55,66 @@ function direction(event) {
         dir = 'right';
     else if((event.keyCode === 83 || event.keyCode === 40) && dir !== 'up')
         dir = 'down';
+
+    directionChanged = true;
 }
 
 function eatTail(head, arr) {
     for(let i = 0; i < arr.length; i++) {
-        if(head.x === arr[i].x && head.y === arr[i].y)
-        clearInterval(game);
+        if(head.x === arr[i].x && head.y === arr[i].y) {
+            clearInterval(game);
+        }
     }
 }
 
 function drawGame() {
-    ctx.drawImage(ground, 0, 0);
+    ctx.drawImage(field, 0, 0);
 
-    ctx.drawImage(foodImg, food.x, food.y);
+    ctx.drawImage(foodImg, food.x, food.y, cellSide, cellSide);
 
     for(let i = 0; i < snake.length; i++) {
-        if(i === 0) {
-            ctx.drawImage(headImg, snake[i].x, snake[i].y);
-        } else {
-            // ctx.fillStyle = 'green';
-            // ctx.fillRect(snake[i].x, snake[i].y, box, box);
-
+        // if(i === 0) {
+        //     ctx.drawImage(headImg, snake[i].x, snake[i].y);
+        // } else {
             ctx.drawImage(bodyImg, snake[i].x, snake[i].y);
-        }
-
+        // }
     }
-
-    ctx.fillStyle = '#fff';
-    ctx.font = '50px Arial';
-    ctx.fillText(score, box * 2.5, box * 1.8);
 
     let snakeX = snake[0].x;
     let snakeY = snake[0].y;
 
-    if(snakeX === food.x && snakeY === food.y) {
-        score++;
-        food = {
-            x: Math.floor(Math.random() * 17 + 1) * box,
-            y: Math.floor(Math.random() * 15 + 3) * box
-        };
-    } else {
-        snake.pop();
-    }
-
-    if(snakeX < box || snakeX > box * 17
-        || snakeY < 3 * box || snakeY > box * 17)
-        clearInterval(game);
-
-    if(dir === 'left') snakeX -= box;
-    if(dir === 'right') snakeX += box;
-    if(dir === 'up') snakeY -= box;
-    if(dir === 'down') snakeY += box;
+    if(dir === 'left') snakeX -= cellSide;
+    if(dir === 'right') snakeX += cellSide;
+    if(dir === 'up') snakeY -= cellSide;
+    if(dir === 'down') snakeY += cellSide;
 
     let newHead = {
         x: snakeX,
         y: snakeY
     }
 
+    if(snakeX === food.x && snakeY === food.y) {
+        scoreCounter.innerText++;
+
+        updateFoodPos();
+    } else {
+        snake.pop();
+    }
+
+    if( snakeX < 0 || 
+        snakeX > cellSide * 16 || 
+        snakeY < 0 || 
+        snakeY > cellSide * 14 ) {
+            clearInterval(game);
+        }
+
     eatTail(newHead, snake);
 
     snake.unshift(newHead);
+
+    directionChanged = false;
+
+    console.log(snake);
 }
 
-let game = setInterval(drawGame, 150);
+let game = setInterval(drawGame, 160);

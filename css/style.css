@@ -1,4 +1,43 @@
+* {
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+}
+
+body {
+    font: 400 16px 'Arial', sans-serif;
+}
+
+.wrapper {
+    width: 584px;
+    margin: 0 auto;
+}
+
+.canvas_container {
+    background: #366d12;
+    padding-bottom: 20px;
+}
+
 #field {
     display: block;
     margin: 0 auto;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    color: #fff;
+    background: #366d12;
+}
+
+.header_txt {
+    font-size: 50px;
+}
+
+.header_img {
+    width: 32px;
+    margin: 0 30px 0 0;
 }

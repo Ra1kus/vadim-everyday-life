@@ -3,12 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./css/normalize.css">
     <link rel="stylesheet" href="./css/style.css">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
-    <title>Повседневная жизнь Вадима</title>
+    <title>Snake</title>
 </head>
 <body>
-    <canvas id="field" width="608" height="608"></canvas>
+    <div class="wrapper">
+
+        <div class="header">
+
+            <div class="header_img">
+                <img src="./img/snake.png" alt="snake">
+            </div>
+
+            <div class="header_txt" id="score-counter">0</div>
+
+        </div>
+
+        <div class="canvas_container">
+
+            <canvas id="field" width="544" height="480"></canvas>
+
+        </div>
+
+    </div>
     <script src="./js/script.js"></script>
 </body>
 </html>
